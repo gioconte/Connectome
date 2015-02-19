@@ -202,7 +202,7 @@ initCanvas = function () {
 
     //projector = new THREE.Projector();
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth *0.5 / window.innerHeight, 0.1, 1000);
 
     //camera = new THREE.OrthographicCamera(window.innerWidth / - 2, window.innerWidth/ 2, window.innerHeight / 2, window.innerHeight/ - 2, 1, 1000 );
     camera.position.z = 50;
@@ -211,7 +211,7 @@ initCanvas = function () {
     canvas = document.getElementById('canvas');
 
     renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth*0.5, window.innerHeight);
 
     canvas.addEventListener('dblclick', onDblClick , true);
     canvas.addEventListener( 'click', onClick, true );
@@ -609,7 +609,7 @@ var removeEdgesGivenNode = function (indexNode) {
 getIntersectedObject = function () {
 
     var vector = new THREE.Vector3(
-        ( event.clientX / window.innerWidth ) * 2 - 1,
+        ( event.clientX / (window.innerWidth * 0.5) ) * 2 - 1,
         - ( event.clientY / window.innerHeight ) * 2 + 1,
         0.5
     );
@@ -681,11 +681,11 @@ drawShortestPath = function (nodeIndex) {
 
 resizeScene = function(){
 
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = window.innerWidth*0.5 / window.innerHeight;
     camera.updateProjectionMatrix();
 
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth* 0.5, window.innerHeight);
 
 
     animate();

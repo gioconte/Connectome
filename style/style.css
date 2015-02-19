@@ -3,6 +3,9 @@ body {
     font-family: 'Fjord', sans-serif;
 }
 
+
+
+
 button{
     background-color: #3498db; /*rgb(197, 239, 247) ;*/
     border-width: 0px;
@@ -67,7 +70,7 @@ input[type="checkbox"]{
 }
 
 #canvas {
-    width: 100%;
+    width: 50%;
     height: 100%;
     z-index: 1;
 }
