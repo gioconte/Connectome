@@ -115,3 +115,11 @@ input[type="checkbox"]{
     right: 10px;
     z-index: 2
 }
+
+#graph-container {
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    position: absolute;
+}

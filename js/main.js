@@ -23,6 +23,7 @@ init = function () {
     createGroups();
     initGUI();
     initCanvas();
+    init2Dgraph();
 };
 
 /*
