@@ -168,6 +168,7 @@ function onClick( event ){
             drawEdgesGivenNode(nodeIndex);
             nodesSelected[nodesSelected.length] = nodeIndex;
             pointedObject = null;
+            updateGraph();
 
         } else
         { //if the nodes is already selected, remove edges and remove from the nodeSelected Array
@@ -513,7 +514,7 @@ var setEdgesColor = function () {
             {
                 opacity: edgeOpacityScale(displayedEdges[i].name),
                 transparent: true,
-                //color: edgeColor,
+                color: edgeColor,
                 linewidth: 2
             });
 

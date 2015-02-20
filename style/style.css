@@ -122,4 +122,5 @@ input[type="checkbox"]{
     width: 50%;
     height: 100%;
     position: absolute;
+    background-color: beige;
 }
