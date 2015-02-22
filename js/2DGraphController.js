@@ -47,12 +47,12 @@ init2Dgraph = function (){
     }
     */
 // Instantiate sigma:
-    s = new sigma({
+/*    s = new sigma({
         graph: g,
         container: 'graph-container'
     });
+*/
 
-    /*
     s = new sigma({
         graph: g,
         renderer: {
@@ -66,9 +66,21 @@ init2Dgraph = function (){
             edgeHoverSizeRatio: 1,
             edgeHoverExtremities: true
         }
-    });*/
+    });
 
 
+    //s.startForceAtlas2({worker: true, barnesHutOptimize: true});
+
+    var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+
+    dragListener.bind('startdrag', function(event) {
+    });
+    dragListener.bind('drag', function(event) {
+    });
+    dragListener.bind('drop', function(event) {
+    });
+    dragListener.bind('dragend', function(event) {
+    });
 };
 
 
@@ -110,12 +122,22 @@ updateGraph = function(){
             label:'node'+ nodesSelected[i],
             x: Math.random(),
             y: Math.random(),
-            size: Math.random(),
+            size: 0.5,
             color: scaleColorGroup(getRegionByNode(nodesSelected[i]))
         };
 
         if(!containsNode(node))
             s.graph.addNode(node);
+
+
+        s.graph.edges().forEach( function(edge){
+            if(edge.value < getThreshold() ){
+                s.graph.dropEdge(edge.id);
+            }
+
+            }
+
+        );
 
         for(j=0; j < row.length; j++){
             if(row[j] > getThreshold()){
@@ -134,8 +156,11 @@ updateGraph = function(){
                     id: 's' + nodesSelected[i]+'t'+j,
                     source: 'n' + nodesSelected[i],
                     target: 'n' + j,
-                    size: 1/row[j],
-                    color: "#f00"
+                    size: row[j]/10,
+                    color: "#f00",
+                    type: 'curve',
+                    value: row[j]
+
                 };
 
                 if(!containsNode(node)) {
@@ -147,10 +172,17 @@ updateGraph = function(){
         }
     }
 
-    s.graph.nodes().forEach(function(node, i, a) {
-        node.x = Math.cos(Math.PI * 2 * i / a.length);
-        node.y = Math.sin(Math.PI * 2 * i / a.length);
-    });
+
+    //removing useless nodes
+
+    s.graph.nodes().forEach( function(node){
+            if(s.graph.degree(node.id) == 0){
+                s.graph.dropNode(node.id)
+            }
+        }
+
+    )
+
 
     s.refresh();
 };
@@ -175,7 +207,7 @@ containsEdge = function (edge){
 
 
     for(var el in edges){
-        if(edges[el].id === edge.id){
+        if((edges[el].source === edge.source && edges[el].target === edge.target ) || (edges[el].source === edge.target && edges[el].target === edge.source) ){
             return true;
         }
     }

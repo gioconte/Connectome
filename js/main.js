@@ -24,6 +24,7 @@ init = function () {
     initGUI();
     initCanvas();
     init2Dgraph();
+    //init2Dg();
 };
 
 /*

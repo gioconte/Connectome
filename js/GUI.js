@@ -195,7 +195,7 @@ setNodeInfoPanel = function (regionName, index){
 
     nodalStrength = Math.floor(nodalStrength*100)/100;
     var para = document.createElement("p");
-    var node = document.createTextNode(regionName + " " + nodalStrength);
+    var node = document.createTextNode(index+ " " + regionName + " " + nodalStrength);
     panel.appendChild(para)
         .appendChild(node);
 
@@ -221,6 +221,7 @@ addThresholdSlider = function (){
             var slider = document.getElementById("thresholdSlider");
             setThreshold(slider.value);
             updateScene();
+            updateGraph();
         });
 
     menu.append("output")
