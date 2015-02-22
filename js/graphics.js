@@ -147,8 +147,7 @@ function onDblClick(event){
 }
 
 function onClick( event ){
-    //TODO: This function does not handle the ways of displaying edges!! FIX IT
-
+    
     event.preventDefault();
 
 
