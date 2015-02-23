@@ -301,6 +301,7 @@ toggleRegion = function (regionName){
         regionsActivated[regionName] = true;
     }
     updateScene();
+    updateGraph();
 };
 
 setRegionsActivated = function (){

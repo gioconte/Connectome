@@ -111,12 +111,12 @@ createLinearScale = function (d) {
 
 
 updateGraph = function(){
-    var i,row, j, node, edge;
+    var i,row, j, node, nodeRegion;
 
-    // s.graph.clear();
 
     for(i=0; i < nodesSelected.length; i++){
-        row = getConnectionMatrixRow(nodesSelected[i]);
+        //row = getConnectionMatrixRow(nodesSelected[i]);
+        nodeRegion = getRegionByNode(nodesSelected[i]);
         node = {
             id:nodesSelected[i],
             label:getRegionNameByIndex(nodesSelected[i]),
@@ -126,7 +126,7 @@ updateGraph = function(){
             color: scaleColorGroup(getRegionByNode(nodesSelected[i]))
         };
 
-        if(!containsNode(node))
+        if(!containsNode(node) && isRegionActive(nodeRegion))
             s.graph.addNode(node);
 
 
@@ -139,37 +139,10 @@ updateGraph = function(){
 
         );
 
-        for(j=0; j < row.length; j++){
-            if(row[j] > getThreshold()){
-                node = {
-                    id:j,
-                    label: getRegionNameByIndex(j),
-                    x: Math.random(),
-                    y: Math.random(),
-                    size: 0.5,
-                    color: scaleColorGroup(getRegionByNode(j))
-                };
-
-
-
-                edge ={
-                    id: 's' + nodesSelected[i]+'t'+j,
-                    source: nodesSelected[i],
-                    target: j,
-                    size: row[j]/10,
-                    color: "#f00",
-                    //type: 'curve',
-                    value: row[j]
-
-                };
-
-                if(!containsNode(node)) {
-                    s.graph.addNode(node);
-                }
-                if(!containsEdge(edge))
-                    s.graph.addEdge(edge);
-            }
-        }
+        if(thresholdModality)
+            drawEdgesGivenNode2d(nodesSelected[i]);
+        else
+            drawTopNEdgesByNode2D(nodesSelected[i], getNumberOfEdges());
     }
 
 
@@ -181,7 +154,7 @@ updateGraph = function(){
 
 cleanDisconnetedNodes = function(){
     s.graph.nodes().forEach( function(node){
-            if(s.graph.degree(node.id) == 0){
+            if(s.graph.degree(node.id) == 0 || !isRegionActive(getRegionByNode(node.id))){
                 s.graph.dropNode(node.id)
             }
         }
@@ -237,3 +210,80 @@ updateNodesColor = function(){
 
     s.refresh();
 }
+
+
+drawEdgesGivenNode2d = function(nodeIndex){
+    var j, edge, node;
+
+    var row = getConnectionMatrixRow(nodeIndex);
+    for(j=0; j < row.length; j++){
+        if(row[j] > getThreshold() && isRegionActive(getRegionByNode(j))){
+            node = {
+                id:j,
+                label: getRegionNameByIndex(j),
+                x: Math.random(),
+                y: Math.random(),
+                size: 0.5,
+                color: scaleColorGroup(getRegionByNode(j))
+            };
+
+            edge ={
+                id: 's' + nodeIndex +'t'+j,
+                source: nodeIndex,
+                target: j,
+                size: row[j]/10,
+                color: "#f00",
+                //type: 'curve',
+                value: row[j]
+
+            };
+
+            if(!containsNode(node)) {
+                s.graph.addNode(node);
+            }
+            if(!containsEdge(edge))
+                s.graph.addEdge(edge);
+        }
+    }
+};
+
+drawTopNEdgesByNode2D = function (nodeIndex, n) {
+    s.graph.edges().forEach(function(edge){
+        s.graph.dropEdge(edge.id);
+    });
+
+    var row = getTopConnectionsByNode(nodeIndex, n);
+    var node,edge;
+    for(obj in row){
+        if(isRegionActive(getRegionByNode(obj)) && visibleNodes[obj]){
+            node = {
+                id:parseInt(obj),
+                label: getRegionNameByIndex(obj),
+                x: Math.random(),
+                y: Math.random(),
+                size: 0.5,
+                color: scaleColorGroup(getRegionByNode(obj))
+            };
+            console.log(node);
+
+            edge ={
+                id: 's' + nodeIndex +'t'+obj,
+                source: nodeIndex,
+                target: parseInt(obj),
+                size: row[obj]/10,
+                color: "#f00",
+                //type: 'curve',
+                value: row[obj]
+
+            };
+
+            console.log("contiene node " + node.id + " " + containsNode(node));
+            if(!containsNode(node)) {
+                s.graph.addNode(node);
+            }
+            if(!containsEdge(edge))
+                s.graph.addEdge(edge);
+        }
+    }
+
+};

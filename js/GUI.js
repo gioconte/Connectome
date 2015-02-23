@@ -410,6 +410,7 @@ addModalityButton = function () {
         .on("change", function () {
             changeModality(this.checked);
             updateScene();
+            updateGraph();
         });
 
 }
@@ -450,6 +451,7 @@ addTopNSlider = function(){
         .on("change", function () {
             setNumberOfEdges(this.value);
             updateScene();
+            updateGraph();
         });
 
     menu.append("output")
