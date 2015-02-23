@@ -118,8 +118,8 @@ updateGraph = function(){
     for(i=0; i < nodesSelected.length; i++){
         row = getConnectionMatrixRow(nodesSelected[i]);
         node = {
-            id:'n'+nodesSelected[i],
-            label:'node'+ nodesSelected[i],
+            id:nodesSelected[i],
+            label:getRegionNameByIndex(nodesSelected[i]),
             x: Math.random(),
             y: Math.random(),
             size: 0.5,
@@ -142,8 +142,8 @@ updateGraph = function(){
         for(j=0; j < row.length; j++){
             if(row[j] > getThreshold()){
                 node = {
-                    id:'n'+j,
-                    label: "node"+j,
+                    id:j,
+                    label: getRegionNameByIndex(j),
                     x: Math.random(),
                     y: Math.random(),
                     size: 0.5,
@@ -154,11 +154,11 @@ updateGraph = function(){
 
                 edge ={
                     id: 's' + nodesSelected[i]+'t'+j,
-                    source: 'n' + nodesSelected[i],
-                    target: 'n' + j,
+                    source: nodesSelected[i],
+                    target: j,
                     size: row[j]/10,
                     color: "#f00",
-                    type: 'curve',
+                    //type: 'curve',
                     value: row[j]
 
                 };
@@ -173,19 +173,21 @@ updateGraph = function(){
     }
 
 
-    //removing useless nodes
+    cleanDisconnetedNodes();
 
+    s.refresh();
+};
+
+
+cleanDisconnetedNodes = function(){
     s.graph.nodes().forEach( function(node){
             if(s.graph.degree(node.id) == 0){
                 s.graph.dropNode(node.id)
             }
         }
+    );
 
-    )
-
-
-    s.refresh();
-};
+}
 
 
 containsNode = function (node){
@@ -215,3 +217,23 @@ containsEdge = function (edge){
     return false;
 
 };
+
+
+removeNodeFromGraph = function(nodeIndex) {
+    s.graph.dropNode(nodeIndex);
+
+    cleanDisconnetedNodes();
+
+    s.refresh();
+};
+
+
+
+updateNodesColor = function(){
+
+    s.graph.nodes().forEach( function(node){
+       node.color = scaleColorGroup(getRegionByNode(node.id));
+    });
+
+    s.refresh();
+}

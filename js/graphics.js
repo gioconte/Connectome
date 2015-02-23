@@ -150,8 +150,6 @@ function onClick( event ){
     
     event.preventDefault();
 
-
-
     var objectIntersected = getIntersectedObject();
 
 
@@ -183,6 +181,7 @@ function onClick( event ){
 
             nodesSelected.splice(el, 1);
             removeEdgesGivenNode(nodeIndex);
+            removeNodeFromGraph(nodeIndex);
         }
     }
 }
@@ -728,7 +727,7 @@ changeColorGroup = function (n) {
     }
     spheres = [];
     updateScene();
-
+    updateNodesColor();
 };
 
 
