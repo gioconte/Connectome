@@ -14,6 +14,8 @@ var activeGroup = 0;
 var connectionMatrix;
 var regionsActivated = [];
 
+var newLookUpTable = [];
+
 
 
 var distanceThreshold;
@@ -88,7 +90,21 @@ getThreshold = function () {
 }
 
 setLookUpTable = function (d) {
+    var i, el;
+
+
     lookUpTable = d.data;
+
+    for(i = 0; i < d.data.length ; i++){
+        el = {"group": d.data[i].group,
+            "place" : d.data[i].place,
+            "rich_club":d.data[i].rich_club,
+            "region_name":d.data[i].region_name
+        };
+
+    newLookUpTable[d.data[i].label] = el;
+    }
+
 };
 
 
@@ -148,53 +164,9 @@ getCentroids = function(){
 /**
  * Get the entire dataset to render the scene
  */
+
 /*
-getDataset = function () {
-    var row;
-    var arrayLength = labelKeys.length;
-    var result =[];
-    var group = [];
-
-    for(var i=0; i < arrayLength; i++ ){
-        row ={};
-        row.x = centroids[i].x;
-        row.y = centroids[i].y;
-        row.z = centroids[i].z;
-        var label = labelKeys[i];
-        var lengthLookUpTable= lookUpTable.length;
-        var index;
-        //Looking for the right element in the lookup table
-
-        for(var j = 0,found = 0; j < lengthLookUpTable && found == 0; j++){
-
-            if(lookUpTable[j].label === label){
-                found == 1;
-                index = j;
-            }
-        }
-        row.group = groups[activeGroup][index];
-
-        //row.name = lookUpTable[index].region_name;
-
-        result[result.length] = row;
-        /*
-        var groupIndex = group.indexOf(row.group);
-
-        if(groupIndex == -1){
-            group [group.length] = row.group;
-        }
-    }
-
-    //groups[groups.length] = group;
-
-    //activeGroup = group;
-
-
-    return result;
-};*/
-
-
-getDataset = function () {
+getOldDataset = function () {
     var row;
     var arrayLength = labelKeys.length;
     //var index;
@@ -221,6 +193,34 @@ getDataset = function () {
                 row.name = lookUpTable[j].region_name;
             }
         }
+
+        row.group = groups[activeGroup][i];
+
+        result[result.length] = row;
+    }
+    return result;
+};
+*/
+
+
+getDataset = function() {
+    var row;
+    var arrayLength = labelKeys.length;
+    //var index;
+    var result = [];
+
+    for (var i = 0; i < arrayLength; i++) {
+        row = {};
+
+        //getting Centroids
+        row.x = centroids[i].x;
+        row.y = centroids[i].y;
+        row.z = centroids[i].z;
+
+
+        var label = labelKeys[i];
+
+        row.name = newLookUpTable[label].region_name;
 
         row.group = groups[activeGroup][i];
 
