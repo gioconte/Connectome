@@ -274,16 +274,16 @@ update = function(){
     var node = nodeG.selectAll(".node")
         .data(nodes);
 
-
-    node.exit().remove();
-
+    
     node.enter().append("circle")
         .attr("class", "node")
         .attr("r", 5)
         .style("fill", function (d) {
-            return color(d.group);
+            return scaleColorGroup(d.group);
         })
         .call(force.drag);
+
+    node.exit().remove();
 
     node.append("title")
         .text(function (d) {
@@ -312,6 +312,7 @@ update = function(){
             });
     });
 
+    console.log(node.data());
     force.nodes(node.data()).links(link.data());
     force.start();
 
