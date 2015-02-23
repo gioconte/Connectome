@@ -410,6 +410,3 @@ getRegionNameByIndex = function(index){
 }
 
 
-
-
-
