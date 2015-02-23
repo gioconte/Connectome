@@ -16,6 +16,7 @@ init2Dgraph = function (){
 
     var data = getDataset();
     scale = createLinearScale(data);
+
 /*
 // Generate the graph:
     for (i = 0; i < data.length; i++) {
@@ -63,8 +64,14 @@ init2Dgraph = function (){
             enableEdgeHovering: true,
             edgeHoverColor: 'edge',
             defaultEdgeHoverColor: '#f00',
-            edgeHoverSizeRatio: 1,
-            edgeHoverExtremities: true
+            edgeHoverSizeRatio: 3,
+            edgeHoverExtremities: true,
+            borderSize: 1,
+            defaultHoverLabelBGColor: "beige",
+            labelHoverShadowColor: "rgba(0,0,0,0)",
+            font: "Open Sans",
+            edgeColor: "default"
+
         }
     });
 
@@ -148,6 +155,10 @@ updateGraph = function(){
 
     cleanDisconnetedNodes();
 
+    s.graph.edges().forEach(function (edge){
+        edge.color = "rgba(0,0,0,"+ edgeOpacityScale(edge.value)+")"
+    })
+
     s.refresh();
 };
 
@@ -213,16 +224,23 @@ updateNodesColor = function(){
 
 
 drawEdgesGivenNode2d = function(nodeIndex){
-    var j, edge, node;
+    var j, edge, node, distance,angle, rand;
+
+    node = s.graph.nodes(nodeIndex);
+
 
     var row = getConnectionMatrixRow(nodeIndex);
     for(j=0; j < row.length; j++){
         if(row[j] > getThreshold() && isRegionActive(getRegionByNode(j))){
+            distance = 1/row[j]*100;
+            rand = Math.random();
+            angle = rand*2*Math.PI;
+
             node = {
                 id:j,
                 label: getRegionNameByIndex(j),
-                x: Math.random(),
-                y: Math.random(),
+                x: node.x + distance*Math.cos(angle),
+                y: node.y + distance*Math.sin(angle),
                 size: 0.5,
                 color: scaleColorGroup(getRegionByNode(j))
             };
@@ -232,7 +250,7 @@ drawEdgesGivenNode2d = function(nodeIndex){
                 source: nodeIndex,
                 target: j,
                 size: row[j]/10,
-                color: "#f00",
+                color: "rgba(255,0,0,0.5)",
                 //type: 'curve',
                 value: row[j]
 
@@ -264,20 +282,18 @@ drawTopNEdgesByNode2D = function (nodeIndex, n) {
                 size: 0.5,
                 color: scaleColorGroup(getRegionByNode(obj))
             };
-            console.log(node);
 
             edge ={
                 id: 's' + nodeIndex +'t'+obj,
                 source: nodeIndex,
                 target: parseInt(obj),
-                size: row[obj]/10,
-                color: "#f00",
+                size: 10,
+                edgeColor: "rgba(0,255,0,0.5)",
                 //type: 'curve',
                 value: row[obj]
 
             };
 
-            console.log("contiene node " + node.id + " " + containsNode(node));
             if(!containsNode(node)) {
                 s.graph.addNode(node);
             }

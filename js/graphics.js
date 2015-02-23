@@ -484,7 +484,7 @@ var setEdgesColor = function () {
         ]
     ).range(["#edf8fb", "#005824"]);
 
-    var edgeOpacityScale = d3.scale.linear().domain(
+     edgeOpacityScale = d3.scale.linear().domain(
         [
             d3.min(allDisplayedWeights, function(element){
                 return element;
