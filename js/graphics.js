@@ -728,7 +728,8 @@ changeColorGroup = function (n) {
     }
     spheres = [];
     updateScene();
-    updateNodesColor();
+    //updateNodesColor();
+    update();
 };
 
 
