@@ -171,7 +171,8 @@ function onClick( event ){
 
             nodesSelected[nodesSelected.length] = nodeIndex;
             pointedObject = null;
-            updateGraph();
+            //updateGraph();
+            update();
 
         } else
         { //if the nodes is already selected, remove edges and remove from the nodeSelected Array

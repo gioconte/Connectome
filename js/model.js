@@ -178,15 +178,15 @@ getOldDataset = function () {
 
 
         var label = labelKeys[i];
-        var lengthLookUpTable= lookUpTable.length;
+        var lengthLookUpTable= oldLookUpTable.length;
 
         //Looking for the right element in the lookup table
 
         for (var j = 0, found = false; j < lengthLookUpTable && !found; j++) {
 
-            if (lookUpTable[j].label == label) {
+            if (oldLookUpTable[j].label == label) {
                 found = true;
-                row.name = lookUpTable[j].region_name;
+                row.name = oldLookUpTable[j].region_name;
             }
         }
 
@@ -195,8 +195,8 @@ getOldDataset = function () {
         result[result.length] = row;
     }
     return result;
-};
-*/
+};*/
+
 
 
 getDataset = function() {
