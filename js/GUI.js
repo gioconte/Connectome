@@ -221,7 +221,7 @@ addThresholdSlider = function (){
             var slider = document.getElementById("thresholdSlider");
             setThreshold(slider.value);
             updateScene();
-            updateGraph();
+            update();
         });
 
     menu.append("output")
