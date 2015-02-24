@@ -112,7 +112,9 @@ update = function(){
         .style("fill", function (d) {
             return scaleColorGroup(d.group);
         })
-        .call(force.drag);
+        .call(force.drag)
+        .on('mouseover', nodeMouseOver)
+        .on('mouseout',nodeMouseOut);
 
     node.append("title")
         .text(function (d) {
@@ -150,6 +152,15 @@ update = function(){
     force.start();
 
 };
+
+
+function nodeMouseOver(){
+    d3.select(this).attr('r','10');
+}
+
+function nodeMouseOut(){
+    d3.select(this).attr('r','5');
+}
 
 
 
