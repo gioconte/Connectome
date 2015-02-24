@@ -97,7 +97,7 @@ update = function(){
 
     link.enter().append("line")
         .attr("class", "link")
-        .style("stroke-width", '1');
+
 
     var node = nodeG.selectAll(".node")
         .data(nodes);
@@ -145,6 +145,12 @@ update = function(){
 
     nodeG.selectAll('circle').style('fill', function(circle){
             return scaleColorGroup(getRegionByNode(circle.id));
+        }
+    );
+
+    linkG.selectAll('line').style('opacity', function(line){
+        console.log(line.value);
+        return edgeOpacityScale(line.value);
         }
     );
 
