@@ -8,6 +8,7 @@
 
 var graph;
 var distanceMatrix = [];
+var shortestPath;
 
 var computeNodalStrength = function (connectionRow) {
     return d3.mean(connectionRow);
@@ -33,7 +34,9 @@ var computeDistanceMatrix = function(){
 
 var computeShortestPathDistances = function(rootNode) {
 
-    return graph.shortestPath(String(rootNode));
+    shortestPath = graph.shortestPath(String(rootNode));
+
+    return shortestPath;
 };
 
 

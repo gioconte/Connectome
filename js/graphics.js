@@ -172,7 +172,7 @@ function onClick( event ){
             nodesSelected[nodesSelected.length] = nodeIndex;
             pointedObject = null;
             //updateGraph();
-            update();
+
 
         } else
         { //if the nodes is already selected, remove edges and remove from the nodeSelected Array
@@ -182,9 +182,10 @@ function onClick( event ){
 
             nodesSelected.splice(el, 1);
             removeEdgesGivenNode(nodeIndex);
-            removeNodeFromGraph(nodeIndex);
+            //removeNodeFromGraph(nodeIndex);
         }
     }
+    update();
 }
 /**
  * This method should be called to init th canvas where we render the brain
@@ -639,8 +640,6 @@ drawShortestPath = function (nodeIndex) {
     var line;
     root = nodeIndex;
 
-
-
     var len = getConnectionMatrixDimension();
     var dist = computeShortestPathDistances(nodeIndex);
 
@@ -679,8 +678,11 @@ drawShortestPath = function (nodeIndex) {
         }
     }
 
+
+
     setEdgesColor();
     updateScene();
+    updateHierarchy();
 
 };
 

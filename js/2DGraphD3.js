@@ -5,7 +5,7 @@
 var force;
 
 
-var linkG, nodeG, g;
+var linkG, nodeG, labelG, g;
 
 init2Dg = function () {
     force = d3.layout.force()
@@ -20,6 +20,7 @@ init2Dg = function () {
 
     linkG = g.append("g").classed("links", true);
     nodeG = g.append("g").classed("nodes", true);
+    labelG = g.append("g").classed("labels", true);
 
     update();
 };
@@ -56,7 +57,6 @@ update = function(){
         for(j=0; j < row.length; j++){
             if(row[j] > getThreshold()){
 
-
                 for(k = 0, found = false; k < nodes.length && !found; k++){
                     if(nodes[k].id == j){
                         found = true;
@@ -73,11 +73,17 @@ update = function(){
                     nodes[nodes.length] = el;
                 }
 
-
-                link = [];
-                link['source'] = rootIndex;
-                link['target'] = targetIndex;
-                link['value'] = row[j];
+                if(j < data[i]) {
+                    link = [];
+                    link['source'] = rootIndex;
+                    link['target'] = targetIndex;
+                    link['value'] = row[j];
+                }else{
+                    link = [];
+                    link['source'] = targetIndex;
+                    link['target'] = rootIndex;
+                    link['value'] = row[j];
+                }
 
                 links.push(link);
 
@@ -96,7 +102,7 @@ update = function(){
     link.exit().remove();
 
     link.enter().append("line")
-        .attr("class", "link")
+        .attr("class", "link");
 
 
     var node = nodeG.selectAll(".node")
@@ -106,7 +112,9 @@ update = function(){
     node.exit().remove();
 
     node.enter().append("circle")
-        .attr('id',node.id)
+        .attr('id',function(node){
+            return node.id;
+        })
         .attr("class", "node")
         .attr("r", 5)
         .style("fill", function (d) {
@@ -116,10 +124,29 @@ update = function(){
         .on('mouseover', nodeMouseOver)
         .on('mouseout',nodeMouseOut);
 
+        /*.append("text")
+        .attr("text-anchor", "middle")
+        .style("fill","#000")
+        .text(function (d) {
+            return d.name;
+        });*/
+
+        /*.append('label')
+        .attr('id',function(node){
+            return 'l'+node.id;
+        })
+        .attr('for',function(node){
+            return node.id;
+        })
+        .text(function (node) {
+            return node.name;
+        });*/
+
     node.append("title")
         .text(function (d) {
             return d.name;
         });
+
 
     force.on("tick", function () {
         link.attr("x1", function (d) {
@@ -146,13 +173,33 @@ update = function(){
     nodeG.selectAll('circle').style('fill', function(circle){
             return scaleColorGroup(getRegionByNode(circle.id));
         }
-    );
+    )
+    /*
+    var label = labelG.selectAll('label').data(nodes);
+
+    label.exit().remove();
+
+    label.enter().append('label')
+        .attr('id',function(node){
+            return 'l'+node.id;
+        })
+        .attr('z-index','2')
+        .attr('for',function(node){
+            return node.id;
+        })
+        .text(function (node) {
+            return node.name;
+        });
+
+    label.exit().remove();*/
+
+
 
     linkG.selectAll('line').style('opacity', function(line){
-        console.log(line.value);
         return edgeOpacityScale(line.value);
         }
     );
+
 
     force.nodes(node.data()).links(link.data());
     force.start();
@@ -160,8 +207,43 @@ update = function(){
 };
 
 
+
+updateHierarchy = function(){
+    var el, i,j, hierarchy = [], children;
+    var sp = shortestPath;
+
+    var tree = d3.layout.tree()
+        .size([640, 486])
+        .children(function(d) { return d.children; });
+
+
+    for(i in sp){
+        if(visibleNodes[i]){
+            el = {};
+            el.id = parseInt(i);
+            children = [];
+            for(j in previousMap){
+                if( visibleNodes[j] && previousMap[j] == parseInt(i) ){
+                    children.push(j);
+                    console.log("figlio!!");
+                }
+            }
+
+            el.chidren = children;
+            hierarchy.push(el);
+        }
+    }
+
+
+    debug = hierarchy;
+};
+
+
+
 function nodeMouseOver(){
     d3.select(this).attr('r','10');
+
+    setNodeInfoPanel(getRegionByNode(this.id), this.id);
 }
 
 function nodeMouseOut(){
