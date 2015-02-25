@@ -220,7 +220,10 @@ addThresholdSlider = function (){
 
             var slider = document.getElementById("thresholdSlider");
             setThreshold(slider.value);
+            var t0 = performance.now()
             updateScene();
+            var t1 = performance.now();
+            console.log(t1-t0);
         });
 
     menu.append("output")

@@ -147,8 +147,6 @@ function onDblClick(event){
 }
 
 function onClick( event ){
-    //TODO: This function does not handle the ways of displaying edges!! FIX IT
-
     event.preventDefault();
 
 
@@ -276,7 +274,6 @@ updateScene = function(){
 
     displayedEdges = [];
 
-
     drawRegions(getDataset());
     drawConnections();
     createLegend();
@@ -292,8 +289,11 @@ animate = function () {
 
     //controls.update(  );
     //oculuscontrol.update(  );
-    render();
 
+    //var t0 = performance.now();
+    render();
+    //var t1 = performance.now();
+    //console.log("render() "+ t1 - t0);
 };
 
 
@@ -341,10 +341,8 @@ var drawRegions = function(dataset) {
     var l = dataset.length;
     var material;
 
-
     createCentroidScale(dataset);
 
-    var geometry;
 
     var xCentroid = d3.mean(dataset, function(d){
         return centroidScale(d.x);
@@ -357,6 +355,7 @@ var drawRegions = function(dataset) {
     var zCentroid = d3.mean(dataset, function(d){
         return centroidScale(d.z);
     });
+
 
     var geometry = new THREE.Geometry();
     for(var i=0; i < l; i++){
@@ -587,7 +586,7 @@ var removeEdgesGivenNode = function (indexNode) {
         var zStart = edge.geometry.vertices[0].z;
 
         //removing only the edges that starts from that node
-        if(x == xStart && y == yStart && z == zStart){
+        if(x == xStart && y == yStart && z == zStart && shortestPathEdges.indexOf(edge) == -1){
             removedEdges[removedEdges.length] = i;
             scene.remove(edge);
         }
